@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="TemplateMo">
+
+    <title>BEEC system</title>
+
+    <!-- Additional CSS Files -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='font-awesome.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='templatemo-lava.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='owl-carousel.css') }}">
+
+</head>
+<body>
+   <!-- ***** Header Area Start ***** -->
+    <header class="header-area header-sticky">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <nav class="main-nav">
+                        <!-- ***** Menu Start ***** -->
+                        <ul class="nav">
+                            <li><a href="/">
+                                <img src="{{ url_for('static', filename='images/Beec60x60.png') }}" width="60" height="60" class="logo"/>
+                            </a></li>
+                            <li class="scroll-to-section"><a href="" class="menu-item">Dashboard</a></li>
+                            </li>
+                            <li class="submenu">
+                                <a href="javascript:;">Edit your data</a>
+                                <ul>
+                                    <li><a href="/company">company</a></li>
+                                    <li><a href="/address">address</a></li>
+                                    <li><a href="/department">department</a></li>
+                                    <li><a href="/joblist">joblist</a></li>
+                                    <li><a href="/employee">employee</a></li>
+                                    <li><a href="/imageupload">imageupload</a></li>
+                                    <li><a href="/theams">theams</a></li>
+                                    <li><a href="/editCards">editCards</a></li>
+                                    <li><a href="/ViewCard">DisplayCard</a></li>
+                                </ul>
+                            </li>
+                            <li class="scroll-to-section"><a href="/login" >Your Account</a>
+                            <li class="scroll-to-section"><a href="/logout" >Log out</a>
+                        </ul>
+                        <a class='menu-trigger'>
+                            <span>Menu</span>
+                        </a>
+                        <!-- ***** Menu End ***** -->
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- ***** Header Area End ***** -->
+
+    <div class="container">
+        {% block theContent %}{% endblock %}
+    </div>
+</body>
+</html>
