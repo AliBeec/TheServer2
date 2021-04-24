@@ -98,7 +98,6 @@ def logout():
         # remove the username from the session if it's there
         session.clear()
 
-    print("Logout Successful!")
     return beecFunc.ReturnResponse("Successful")
 
 @app.route('/Register', methods=['GET', 'POST'])

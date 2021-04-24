@@ -8,7 +8,7 @@ def index():
 
 @app.route("/beecStyle.css")
 def styles():
-    return flask.send_from_directory("HTML", "beecStyle.css")
+    return flask.render_template("beecStyle.css")
 
 # --------------------------------------------------------------------------------------------
 # --------------------------------------------------------------------------------------------
@@ -36,7 +36,7 @@ def compnayEdit():
     theList = comFunc.DropListTags(
         "SELECT `companyid`,`companyname` FROM `company` WHERE `representiviteid`=" + str(session['UserID']))
     # return open("HTML/Address.html").read().format(TheList=theList)
-    return flask.send_from_directory("HTML", "editCompany.html")
+    return flask.render_template("editCompany.html")
 
 @app.route('/department', methods=['GET', 'POST'])
 def departmentEdit():
@@ -49,7 +49,7 @@ def departmentEdit():
                        TableName='departement', IdName='departementid', \
                        inCondation="`departementid`=%(departementid)s")
 
-    return flask.send_from_directory("HTML", "department.html")
+    return flask.render_template("department.html")
 
 @app.route('/address', methods=['GET', 'POST'])
 def AddressEdit():
@@ -65,7 +65,7 @@ def AddressEdit():
     theList = comFunc.DropListTags("SELECT `addressid`,`addressname` FROM addresseslists")
     return open("Beec/HTML/Address.html").read().format(TheList=theList)
 
-    # return flask.send_from_directory("HTML", "Address.html")
+    # return flask.render_template("Address.html")
 
 @app.route('/joblist', methods=['GET', 'POST'])
 def joblistEdit():
@@ -79,7 +79,7 @@ def joblistEdit():
                        inCondation="`jobid`=%(jobid)s", \
                        idGenSize=3)
 
-    return flask.send_from_directory("HTML", "joblist.html")
+    return flask.render_template("joblist.html")
 
 @app.route('/employee', methods=['GET', 'POST'])
 def employeeEdit():
@@ -92,7 +92,7 @@ def employeeEdit():
                        inCondation="`empid`=%(empid)s", \
                        idGenSize=9, ExtraData={"userid": str(session['UserID'])})
 
-    return flask.send_from_directory("HTML", "employee.html")
+    return flask.render_template("employee.html")
 
 @app.route('/imageupload', methods=['GET', 'POST'])
 def imageupload():
@@ -128,7 +128,7 @@ def imageupload():
             return '<center>' + r[1] + '<center>"<meta http-equiv="refresh" content="3";url=' + url_for(
                 'imageUpload') + '" />"'
 
-    return flask.send_from_directory("HTML", "imageUpload.html")
+    return flask.render_template("imageUpload.html")
 
 @app.route('/theams', methods=['GET', 'POST'])
 def theamsEdit():
@@ -143,7 +143,7 @@ def theamsEdit():
                        inCondation="`theamid`=%(theamid)s", \
                        ExtraData=MoreData, idGenSize=8)
 
-    return flask.send_from_directory("HTML", "Theam.html")
+    return flask.render_template("Theam.html")
 
 @app.route('/editCards', methods=['GET', 'POST'])
 def CardsEdit():
@@ -233,12 +233,12 @@ def CardsEdit():
 
 
     else:
-        return flask.send_from_directory("HTML", "EditCard.html")
+        return flask.render_template("EditCard.html")
 
 @app.route('/ViewCard/', methods=['GET'])
 def ViewCard():
     # Get the theam from the Database
-    return flask.send_from_directory("HTML", "DisplayCard.html")
+    return flask.render_template("DisplayCard.html")
 
 @app.route('/DisplayCard/<cardID>', methods=['GET', 'POST'])
 def DisplayCard(cardID):

@@ -1,8 +1,6 @@
 import os
 from flask import send_file, session
 
-from OldStuff import AppServer
-
 import hashlib as Hashing
 import json
 from Beec import app, EstablishConnection as SqlConn, mail
@@ -20,7 +18,7 @@ def displayImage(ImageName, app, IsAppServer=True):
         return send_file(imageFileName, mimetype='image/gif')
     else:
         if IsAppServer:
-            return AppServer.ReturnResponse("NOT FOUND")
+            return ReturnResponse("NOT FOUND")
         else:
             return "NOT FOUND"
 
@@ -88,6 +86,10 @@ def getUserFullData(UserID:str):
             " AND `empbelongstodeprt`.`empid` = `employee`.`empid` AND `company`.`companyid` = `departement`.`belongtocomapny`"
 
     db = SqlConn.ConnectToDB()
+    if type(db) is str:
+        print(db)
+        return db
+
     r = SqlConn.SendSQL(db, theSQL, returnColumns=True)
 
     if "No Data" in r:
