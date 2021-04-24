@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>eCard exchanger</title>
+</head>
+<body>
+    <center>Adding or editing addresses</center>
+    <br>
+    <br><a href="/home">HOME</a><br></p>
+    <br>
+    <form action="/address" method="POST">
+        <label for="addressid">ID:</label><br>
+
+        <select name="addressid" id="addressid">
+            {TheList}
+        </select><Br>
+
+        <! input type="text" id="addressid" name="addressid"><br>
+
+        <label for="addressname">Title:</label><br><input type="text" id="addressname" name="addressname" required><br>
+        <label for="firstline">Address:</label><br><input type="text" id="firstline" name="firstline"><br>
+        <label for="streetname">Street Name:</label><br><input type="text" id="streetname" name="streetname"><br>
+        <label for="unitid">Unit No:</label><br><input type="text" id="unitid" name="unitid" required><br>
+        <label for="postoffice">Post Office:</label><br><input type="text" id="postoffice" name="postoffice"><br>
+        <label for="area">Area:</label><br><input type="text" id="area" name="area" ><br>
+        <label for="quarter">Quarter:</label><br><input type="text" id="quarter" name="quarter"><br>
+        <label for="countryid">Country code (two litter):</label><br><input type="text" id="countryid" name="countryid" required><br>
+        <input type="hidden" id="WEB" name="WEB">
+        <br>
+        <button type="submit" name="newC" id="butNewC">new</button>  |        <button type="submit" name="editC" id="butEditC">update</button><br>
+    </form>
+</body>
+</html>

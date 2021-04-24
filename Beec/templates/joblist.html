@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>eCard exchanger</title>
+</head>
+<body>
+    <center>Welcome to the eCard exchanger server</center>
+    <br>
+    <br><a href="/home">HOME</a><br></p>
+    <br>
+    <form action="/joblist" method="POST">
+        <select name="JobEdit" id="JobEdit">
+            {TheList}
+        </select><Br>
+        <label for="jobid">ID:</label><br><input type="text" id="jobid" name="jobid"><br>
+        <label for="jobname">Name:</label><br><input type="text" id="jobname" name="jobname" required><br>
+        <label for="jobdescription">Description:</label><br><input type="text" id="jobdescription" name="jobdescription"><br>
+        <button type="submit" name="newC" id="butNewC">new</button>  |        <button type="submit" name="editC" id="butEditC">update</button><br>
+    </form>
+
+</body>
+</html>

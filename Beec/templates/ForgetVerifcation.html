@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>eCard exchanger</title>
+</head>
+<body>
+    <center>Forget password Verification</center>
+    <br>
+    <br>
+    <form action="/forgetVeri" method="POST">
+        <label for="VerifcationCode">Enter the code you resived on you registered emailed:</label><br>
+        <input type="text" id="VerifcationCode" name="VerifcationCode" required><br>
+
+        <label for="NewPassword">Enter a new password:</label><br>
+        <input type="password" id="NewPassword" name="NewPassword" required><br>
+
+        <label for="passwordCheck">Reenter the password:</label><br>
+        <input type="password" id="passwordCheck" name="passwordCheck" required><br>
+
+        <button type="submit">submit</button><br>
+    </form>
+    <br><a href="/home">HOME</a><br></p>
+
+</body>
+</html>

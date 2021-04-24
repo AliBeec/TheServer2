@@ -1,0 +1,25 @@
+{% extends "base.html"%}
+{% block theContent %}
+
+    <center><h1>The eCard exchange server</h1></center>
+    <br>
+    <center>
+    <p><a href="/logout">Logout from the system</a>  |  <a href="/Register">new Register</a>  | <a href="/">Main Page</a><br></p>
+
+    <br>
+    <h2>Hello, {{first_header}} {{p1}}!</h2>
+    <p>
+    <br>
+        Funciontion List:<Br>
+        <p><a href="/company">company</a><br></p>
+        <p><a href="/address">address</a><br></p>
+        <p><a href="/department">department</a><br></p>
+        <p><a href="/joblist">joblist</a><br></p>
+        <p><a href="/employee">employee</a><br></p>
+        <p><a href="/imageupload">imageupload</a><br></p>
+        <p><a href="/theams">theams</a><br></p>
+        <p><a href="/editCards">editCards</a><br></p>
+        <p><a href="/ViewCard">DisplayCard</a><br></p>
+    </center>
+
+{% endblock %}

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>eCard exchanger</title>
+</head>
+<body>
+    <center>Create your card</center>
+    <br>
+    <br>
+    <form action="/editCards" method="POST">
+
+        <label for="cardname">Card Name:</label><br><input type="text" id="cardname" name="cardname"><br>
+        <label for="hashlink">Card Hash Link:</label><br><input type="text" id="hashlink" name="hashlink"><br>
+        <input type="checkbox" id="isprivate" name="isprivate"><label for="isprivate">  Is private? </label><br>
+        <label for="htmllink">HTML Link:</label><br><input type="text" id="htmllink" name="htmllink"><br>
+        <label for="applytheamid">Theam ID:</label><br><input type="text" id="applytheamid" name="applytheamid"><br>
+        <label for="INFO">Card Info (JSON Object):</label><br><input type="text" id="INFO" name="INFO"><br>
+        <label for="QRCodeImg">QR Code Img:</label><br><input type="text" id="QRCodeImg" name="QRCodeImg"><br>
+        <label for="foremployee">For Emplyee:</label><br><input type="text" id="foremployee" name="foremployee"><br>
+        <button type="submit" name="newC" id="butNewC">new</button>  |        <button type="submit" name="editC" id="butEditC">update</button><br>
+    </form>
+    <br><a href="/home">HOME</a><br></p>
+
+</body>
+</html>

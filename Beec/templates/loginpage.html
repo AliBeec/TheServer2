@@ -1,0 +1,22 @@
+{% extends "base.html"%}
+{% block theContent %}
+    <div class="welcome-area" id="welcome">
+        <div class="header-text">
+            <div class="container">
+                <div class="row">
+                    <div class="left-text col-lg-6"
+                        data-scroll-reveal="enter left move 30px over 0.6s after 0.4s">
+                        <form method="post" action="/login" class="contact-form">
+                            <label for="Username">username:</label><br><input type="text" id="Username" name="Username" required><br>
+                            <label for="password">password:</label><br><input type="password" id="password" name="password" required><br>
+                            <input type="hidden" id="WEB" name="WEB"><br>
+                            <p><input type=submit value=Login class="main-button-slider">
+                        </form>
+                        <br>
+                        <font color="red">{{SystemMessage}}</font>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

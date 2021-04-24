@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>eCard exchanger</title>
+</head>
+<body>
+    <center>Add or Edit Employee</center>
+    <br>
+    <br><a href="/home">HOME</a><br></p>
+    <br>
+    <form action="/employee" method="POST">
+        <select name="EmployeeEdit" id="EmployeeEdit">
+            {TheList}
+        </select><Br>
+        <label for="empid">ID:</label><br><input type="text" id="empid" name="empid"><br>
+        <label for="nickname">Nickname or Title:</label><br><input type="text" id="nickname" name="nickname"><br>
+        <label for="firstname">First Name:</label><br><input type="text" id="firstname" name="firstname" required><br>
+        <label for="middlename">Middle Name:</label><br><input type="text" id="middlename" name="middlename"><br>
+        <label for="grandname">Grandfather Name:</label><br><input type="text" id="grandname" name="grandname"><br>
+        <label for="lastname">Family Name:</label><br><input type="text" id="lastname" name="lastname" required><br>
+        <label for="abuname">Abu Name:</label><br><input type="text" id="abuname" name="abuname"><br>
+        <label for="mobile">Mobile Phone:</label><br><input type="text" id="mobile" name="mobile"><br>
+        <label for="phone">Land/Other Phone:</label><br><input type="text" id="phone" name="phone"><br>
+        <label for="hometel">Home Phone:</label><br><input type="text" id="hometel" name="hometel"><br>
+        <label for="workphone">Work Phone:</label><br><input type="text" id="workphone" name="workphone"><br>
+        <label for="email">Email:</label><br><input type="text" id="email" name="email"><br>
+        <label for="notes">NOTES:</label><br><input type="text" id="notes" name="notes"><br>
+        <label for="licencesid">Licences ID:</label><br><input type="text" id="licencesid" name="licencesid" required><br>
+        <Br>
+        <button type="submit" name="newC" id="butNewC">new</button>  |        <button type="submit" name="editC" id="butEditC">update</button><br>
+    </form>
+
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>eCard exchanger</title>
+</head>
+<body>
+    <center>Create a new theam for your comapny</center>
+    <br>
+    <br><a href="/home">HOME</a><br></p>
+    <br>
+    <form action="/theams" method="POST">
+        <select name="TheamEdit" id="THeamEdit">
+            {TheList}
+        </select><Br>
+        <label for="theamid">ID:</label><br><input type="text" id="theamid" name="theamid"><br>
+        <label for="theamname">Theam Name:</label><br>
+        <input type="text" id="theamname" name="theamname" required><br>
+        <label for="HTMLcode">HTML code:</label><br>
+        <input type="text" id="HTMLcode" name="HTMLcode" required><br>
+        <p hidden><label for="createdby">createdby:</label><br>
+            <input type="text" id="createdby" name="createdby" required><br></p>
+        <label for="forcompany">Attach to Comapny ID:</label><br>
+        <input type="text" id="forcompany" name="forcompany" required><br>
+        <label for="licenceid">Licence ID:</label><br>
+        <input type="text" id="licenceid" name="licenceid" required><br>
+        <button type="submit" name="newC" id="butNewC">new</button>  |        <button type="submit" name="editC" id="butEditC">update</button><br>
+    </form>
+</body>
+
+</html>

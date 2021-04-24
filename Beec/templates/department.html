@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>eCard exchanger</title>
+</head>
+<body>
+    <center>Department Adding and Editing</center>
+    <br>
+    <br><a href="/home">HOME</a><br></p>
+    <br>
+    <form action="/department" method="POST">
+        <select name="departementEdit" id="departementEdit">
+            {TheList}
+        </select><Br>
+
+        <label for="departementid">ID:</label><br><input type="text" id="departementid" name="departementid"><br>
+        <label for="departementname">Name:</label><br><input type="text" id="departementname" name="departementname"><br>
+        <label for="landphone1">Land Phone Number 1:</label><br><input type="text" id="landphone1" name="landphone1"><br>
+        <label for="landphone2">Land Phone Number 2:</label><br><input type="text" id="landphone2" name="landphone2"><br>
+        <label for="email">Main Email:</label><br><input type="text" id="email" name="email"><br>
+        <label for="email2">Other Email:</label><br><input type="text" id="email2" name="email2"><br>
+        <label for="website">Website:</label><br><input type="text" id="website" name="website"><br>
+        <label for="belongtocomapny">Releated to Company ID:</label><br><input type="text" id="belongtocomapny" name="belongtocomapny"><br>
+        <label for="addressid">Address ID:</label><br><input type="text" id="addressid" name="addressid"><br>
+        <br>
+        <button type="submit" name="newC" id="butNewC">New</button>  |  <button type="submit" name="editC" id="butEditC">update</button><br>
+    </form>
+
+</body>
+</html>

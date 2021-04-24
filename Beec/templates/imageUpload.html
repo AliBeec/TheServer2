@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>eCard exchanger</title>
+</head>
+<body>
+    <center>UpladImage</center>
+    <br>
+    <br><a href="/home">HOME</a><br></p>
+    <br>
+    <form action="/imageupload" method="POST" enctype="multipart/form-data">
+        <p><label for="ImageName">Image Name:</label><br>
+            <input type="text" id="ImageName" name="ImageName" required><br></p>
+        <p></p><label class="custom-file-label" for="image">Select image File:</label>
+        <input type="file" class="custom-file-input" name="image" id="image" required><br>
+        </p>
+        <br>
+        <button type="submit" name="newC" id="butNewC">submit</button>
+    </form>
+
+</body>
+</html>
