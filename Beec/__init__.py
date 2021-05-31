@@ -28,3 +28,5 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 import Beec.OnlyWebsite
 import Beec.OnlyApp
 import Beec.LoginRouts
+import Beec.HardFunction
+import Beec.HardFunction.QRcodeGenerator
