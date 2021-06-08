@@ -121,5 +121,3 @@ def extractColumnNames(db, SqlIn:str):
         tempList.append(oneCol[0])
 
     return tempList
-
-print("ME:", getUserFullData("0"))

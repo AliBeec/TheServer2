@@ -1,6 +1,8 @@
-from Beec import EstablishConnection as SqlConn, CommanFunctions as beecFunc, app, Cards
-from flask import request
+import Beec.Cards.CardInfo as CardInfo
+from Beec import EstablishConnection as SqlConn, CommanFunctions as beecFunc, app, Checking
+from flask import request, session
 import json
+
 
 # --------------------------------------------------------------------------------------------
 # --------------------------------------------------------------------------------------------
@@ -15,6 +17,8 @@ def GetUserFullData(UserID):
     if loginResult != True:
         print("Fulldata request rejected, login is required")
         return loginResult;
+
+    UserID = Checking.onlyNumber(UserID)
 
     r = json.loads(beecFunc.getUserFullData(UserID))
 
@@ -123,3 +127,11 @@ def checkLogin():
         return beecFunc.ReturnResponse("LOGIN")
     else:
         return True
+
+@app.route('/WantedFeilds', methods=['GET', 'POST'])
+def WantedFeilds():
+    if checkLogin() == False:
+        return
+
+    UserID = str(session['UserID'])
+    return beecFunc.ReturnResponse(CardInfo.getSelectedFeilds(UserID))

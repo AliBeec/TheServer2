@@ -323,7 +323,7 @@ def CallFor(callingAddress: str, parametersList: str, TableName: str, ExtraData:
 
     elif 'editC' in request.form:
         # Create the list of paramter accordingly
-        print("^^^", FullInData)
+        #print("^^^", FullInData)
         UpdateList = SqlConn.makeHTML(WhatYouWant="UPDATE", ParaList=parametersList)
         SQLs = "UPDATE " + TableName + " SET " + UpdateList + " WHERE " + inCondation
         r = SqlConn.SendSQL(db, SQLs, FullInData, returnDate=False)

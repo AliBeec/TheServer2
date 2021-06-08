@@ -15,6 +15,9 @@ def ConnectToDB():
     except:
         return "Connection to database error"
 
+def getDatabaseName():
+    return "ecardbd2"
+
 def SendSQL(myDBin, SQLStatment:str, parameters={}, returnDate=True, returnColumns=False):
     try:
         mycursor = myDBin.cursor()
@@ -33,7 +36,8 @@ def SendSQL(myDBin, SQLStatment:str, parameters={}, returnDate=True, returnColum
             return mycursor.fetchall()
         else:
             myDBin.commit()
-            return ["OK", ""]
+            return ["OK", mycursor.rowcount]
+
     except (mysql.Error, mysql.Warning) as e:
         return ["err", str(e)]
     #except:

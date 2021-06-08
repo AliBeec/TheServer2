@@ -47,13 +47,14 @@ def login():
         #print(password)
         para = {"username": username, "password": password}
         r = SqlConn.SendSQL(db, "SELECT `ourusers`.`userid`, `ourusers`.`email`, `CanLogin`, `verified`, `points`, `userroleid`, " + \
-                            "`employee`.`firstname`, `employee`.`lastname` FROM `ourusers`, `employee` WHERE `employee`." +  \
+                            "`employee`.`firstname`, `employee`.`lastname`, `ourusers`.`verified`, `ourusers`.`defultCardID` FROM `ourusers`, `employee` WHERE `employee`." +  \
                             "userid = ourusers.userid AND `ourusers`.`email` = %(username)s AND `password`=%(password)s AND " + \
-                            "`CanLogin`=1 AND verified=1 LIMIT 1", para)
+                            "`CanLogin`=1 LIMIT 1", para)
         db.close()
 
         # Check the user
         if r != []:
+
             # Open the session
             print(r)
             session['Username'] = username
@@ -66,7 +67,11 @@ def login():
             session['FullName'] = r[0][6] + " " + r[0][7]
 
             if 'WEB' not in FullInData:
-                responseDic = {"Result": "Success!"}
+                # Check if the user has completed his verifction
+                if r[0][8] != 1:
+                    responseDic = {"Result": "Verification"}
+                else:
+                    responseDic = {"Result": "Success!"}
 
                 for l in session:
                     responseDic[l] = session[l]
@@ -173,6 +178,8 @@ def RegisterNewUser():
 
         print("Everything is OK")
 
+        ErrorArray = []
+
         # Create User ID
         FullInData['userid'] = str(SqlConn.GenerateRadom(8))
         FullInData['password'] = beecFunc.hasPassword(FullInData['Passowrd'])
@@ -187,8 +194,15 @@ def RegisterNewUser():
 
         # Check if result is ok
         if ResultData == None or ResultData[0] != "OK":
+
+            # If the error was becuse exisiting email, change the 'err' title to exisit
+            # This is to dispaly the correct error message on the app
+
             if 'WEB' not in FullInData:
-                return beecFunc.ReturnResponse(ResultData)
+                if "exisits" in ResultData[1]:
+                    return beecFunc.ReturnResponse("Exisit")
+                else:
+                    return beecFunc.ReturnResponse(ResultData[1])
             else:
                 return str(ResultData)
 
@@ -227,10 +241,13 @@ def RegisterNewUser():
                               para, False)
 
             # Send the email
-            beecFunc.SendEmail(emailSubject="Avtivate you account with eCards", emailTo=FullInData['email'],
+            try:
+                beecFunc.SendEmail(emailSubject="Avtivate you account with eCards", emailTo=FullInData['email'],
                                emailBody="Hi Mr. " + FullInData['FirstName'] + \
                                          ", \n You have register with us and complete your registration please click the line bellow or use this Code:\n" + \
                                          VirifcationCode + " \n Thank you ...")
+            except:
+                ErrorArray.append("Email")
 
             # Close DB Connection
             SqlConn.CloseConnection(dbConn)
@@ -238,7 +255,11 @@ def RegisterNewUser():
             # 5 Redirect to verificaiton
             RR = flask.send_from_directory("HTML", "EmailVerifcation.html")
             if 'WEB' not in FullInData:
-                return beecFunc.ReturnResponse({"Result":"OK", "UserID":ResultData[1] }, True)
+                if len(ErrorArray) > 0:
+                    if "Email" in ErrorArray:
+                        return beecFunc.ReturnResponse({"Result": "Email", "UserID": ResultData[1]}, True)
+                else:
+                    return beecFunc.ReturnResponse({"Result":"OK", "UserID":ResultData[1] }, True)
             else:
                 return str(RR)
 
@@ -263,6 +284,8 @@ def emailVerfication():
         FullInData = json.dumps(request.form)
         FullInData = json.loads(FullInData)
         inVerCode = Checking.RemoveUnwantedChar(FullInData['VerCode'])
+
+        print(FullInData)
 
         if len(inVerCode) == 8:
             myDB = SqlConn.ConnectToDB()
@@ -296,7 +319,7 @@ def resendVerifcaiton(UserID):
     #Clean the Passed UserID
     UserID =  Checking.RemoveUnwantedChar(UserID)
 
-    # Connect to the SQL serer
+    # Connect to the SQL server
     dbConn = SqlConn.ConnectToDB()
 
     # Check if the user exisits and get its data
@@ -305,6 +328,7 @@ def resendVerifcaiton(UserID):
                       "WHERE ourusers.`userid`=%(userID)s AND verified = 0 AND ourusers.userid = employee.userid", para)
 
     if ur == None:
+        print("Fail")
         return beecFunc.ReturnResponse("Fail")
 
     # Create new Verifcation code
@@ -320,10 +344,14 @@ def resendVerifcaiton(UserID):
     SqlConn.CloseConnection(dbConn)
 
     # Send the email
-    beecFunc.SendEmail(emailSubject="Avtivate you account with eCards", emailTo=ur[0][0],
+    try:
+        beecFunc.SendEmail(emailSubject="Avtivate you account with eCards", emailTo=ur[0][0],
                        emailBody="Hi Mr. " + ur[0][1] + " " + ur[0][2] + \
                                  ", \n You have register with us and complete your registration please click the line bellow or use this Code:\n" + \
                                  VirifcationCode + " \n Thank you ...")
+    except:
+        print("Email Failer")
+        return beecFunc.ReturnResponse("EmailFail")
 
     return beecFunc.ReturnResponse("OK")
 

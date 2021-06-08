@@ -1,5 +1,5 @@
 from Beec import EstablishConnection as SqlConn
-
+from Beec import HardFunction as QRCode
 
 def NewCard(POST_REQUEST):
 
@@ -25,6 +25,8 @@ def NewCard(POST_REQUEST):
     # 2. Create and add the theme
     #       - Check if the comapny has the enough licene
     # 3. Create and add the card
+    # 4. Create a QR code
+    # 5. Set as default card
 
     # Req Paramters: EmployeeID, UserID,
 
@@ -51,3 +53,9 @@ def NewCard(POST_REQUEST):
     else:
         # Card was found, can't add new one
         return ("Card Found")
+
+    # -------------------------
+    #   Create the QR Code
+    # -------------------------
+
+    QRCode.Qe
