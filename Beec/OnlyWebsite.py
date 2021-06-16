@@ -105,6 +105,8 @@ def imageupload():
         # Get the image file name
         imageFileName = FileStorage.filename
 
+        print(request.files)
+
         # Save the comming picture
         FileStorage.save(os.path.join(app.config["UploadImageFolder"], FileStorage.filename))
 
@@ -116,17 +118,13 @@ def imageupload():
         FullInData['ImageName'] = Checking.RemoveUnwantedChar(FullInData['ImageName'])
 
         # React with DB
-        db = SqlConn.ConnectToDB()
-        SQLs = "INSERT INTO imgsave (`Path`, `UploadedBy`, `ImageName`, `type`) VALUES " + \
-               "('" + FileStorage.filename + "','" + str(session['UserID']) + "','" + FullInData[
-                   'ImageName'] + "', 'F')"
-        r = SqlConn.InsertSQL(db, SQLs, FullInData, returnID=False)
+        r = comFunc.addImageToDB(FileName=FileStorage.filename, ImageName=FullInData['ImageName'])
 
-        if r[0] == "OK":
-            return redirect("/home")
-        else:
+        if 'err' in r:
             return '<center>' + r[1] + '<center>"<meta http-equiv="refresh" content="3";url=' + url_for(
                 'imageUpload') + '" />"'
+        else:
+            return redirect("/home")
 
     return flask.render_template("imageUpload.html")
 

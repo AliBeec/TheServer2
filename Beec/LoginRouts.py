@@ -9,7 +9,7 @@ from Beec import Checking, CommanFunctions as beecFunc, app, EstablishConnection
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    print("Login")
+    #print("Login")
     if request.method == 'POST':
 
         # Check if POST request has the Username paramter
@@ -47,7 +47,8 @@ def login():
         #print(password)
         para = {"username": username, "password": password}
         r = SqlConn.SendSQL(db, "SELECT `ourusers`.`userid`, `ourusers`.`email`, `CanLogin`, `verified`, `points`, `userroleid`, " + \
-                            "`employee`.`firstname`, `employee`.`lastname`, `ourusers`.`verified`, `ourusers`.`defultCardID` FROM `ourusers`, `employee` WHERE `employee`." +  \
+                            "`employee`.`firstname`, `employee`.`lastname`, `ourusers`.`verified`, `ourusers`.`defultCardID`, `employee`.`empid` " +\
+                            "FROM `ourusers`, `employee` WHERE `employee`." +  \
                             "userid = ourusers.userid AND `ourusers`.`email` = %(username)s AND `password`=%(password)s AND " + \
                             "`CanLogin`=1 LIMIT 1", para)
         db.close()
@@ -56,7 +57,7 @@ def login():
         if r != []:
 
             # Open the session
-            print(r)
+            #print(r)
             session['Username'] = username
             session['UserID'] = r[0][0]
             session['Email'] = r[0][1]
@@ -65,6 +66,9 @@ def login():
             session['Points'] = r[0][4]
             session['UserRoleID'] = r[0][5]
             session['FullName'] = r[0][6] + " " + r[0][7]
+            session['EmpID'] = r[0][8]
+
+            #print(session)
 
             if 'WEB' not in FullInData:
                 # Check if the user has completed his verifction
@@ -94,7 +98,6 @@ def login():
                 return flask.render_template("loginpage.html",
                                              SystemMessage="Wrong user name or password. Please try again.")
 
-    print("NOT POST")
     return flask.render_template("loginpage.html")
 
 @app.route('/logout', methods=['GET', 'POST'])

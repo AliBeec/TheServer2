@@ -10,17 +10,24 @@ import flask_mail as eMail
 # @app.route('/SavedImage/<ImageName>', methods=['GET','POST'])
 def displayImage(ImageName, app, IsAppServer=True):
 
-    # Create the absulte path
-    imageFileName = os.path.join(app.config["UploadImageFolder"], ImageName)
+    try:
+        # Create the absulte path
+        imageFileName = os.path.join(app.config["UploadImageFolder"], ImageName)
 
-    # Check if the image is there
-    if os.path.isfile(imageFileName):
-        return send_file(imageFileName, mimetype='image/gif')
-    else:
+        # Check if the image is there
+        if os.path.isfile(imageFileName):
+            return send_file(imageFileName, mimetype='image/gif')
+        else:
+            if IsAppServer:
+                return ReturnResponse("NOT FOUND")
+            else:
+                return "NOT FOUND"
+    except:
         if IsAppServer:
             return ReturnResponse("NOT FOUND")
         else:
             return "NOT FOUND"
+
 
 # -----------------------------------------------
 
@@ -87,7 +94,7 @@ def getUserFullData(UserID:str):
 
     db = SqlConn.ConnectToDB()
     if type(db) is str:
-        print(db)
+        print("DB")
         return db
 
     r = SqlConn.SendSQL(db, theSQL, returnColumns=True)
@@ -121,3 +128,13 @@ def extractColumnNames(db, SqlIn:str):
         tempList.append(oneCol[0])
 
     return tempList
+
+def addImageToDB(FileName:str, ImageName:str):
+
+    db = SqlConn.ConnectToDB()
+
+    SQLs = "INSERT INTO imgsave (`Path`, `UploadedBy`, `ImageName`, `type`) VALUES " + \
+           "('" + FileName + "','" + str(session['UserID']) + "','" + ImageName + "', 'F')"
+    return SqlConn.InsertSQL(db, SQLs)
+
+# print("ME:", getUserFullData("0"))

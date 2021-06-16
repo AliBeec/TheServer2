@@ -1,8 +1,8 @@
 import Beec.Cards.CardInfo as CardInfo
+from Beec.Cards.NewCard import NewCard as AddNewCard
 from Beec import EstablishConnection as SqlConn, CommanFunctions as beecFunc, app, Checking
 from flask import request, session
-import json
-
+import json, os, random
 
 # --------------------------------------------------------------------------------------------
 # --------------------------------------------------------------------------------------------
@@ -35,77 +35,14 @@ def GetUserFullData(UserID):
                                       status=200,
                                       mimetype='application/json')
 
-def GetUserFullData_OLD(UserID):
-    # Make sure the user is loged in
 
-    loginResult = checkLogin()
-    if loginResult != True:
-        print("Fulldata request rejected, login is required")
-        return loginResult;
-
-    r = beecFunc.getUserFullData(UserID)
-
-    # Create the SQL
-    theSQL = "SELECT `nickname`, `firstname`, `middlename`, `grandname`, `lastname`, `abuname`, `phone`, " \
-             "`mobile`, emp.`empid`, `hometel`, emp.`email` as empEmail, `workphone`, `notes`, `departementname`, `landphone1` " \
-             "as detpPhone1, `landphone2` as detpPhone2, dept.`email` as DeptEmail1, `email2` as DeptEmail2, " \
-             "dept.`website` as DeptWeb, `companyname`, `websitelink` as CompWeb, jobslist.jobname " \
-             "FROM employee emp,empbelongstodeprt EmpDept, departement dept, company, jobslist, empjob " \
-             "WHERE `userid`='" + UserID + "' AND `licencesid`!='' AND emp.`empid`=EmpDept.empid " \
-                                           "AND empDept.departid = dept.departementid AND company.companyid = dept.belongtocomapny " \
-                                           "AND emp.empid = empjob.empid AND empjob.jobid = jobslist.jobid"
-
-    # Grap the data from the database
-    db = SqlConn.ConnectToDB()
-    r = SqlConn.SendSQL(db, theSQL)
-
-    if "err" in r:
-        print("Error in r db 1")
-        return beecFunc.ReturnResponse("NONE")
-
-    if (len(r) == 0):
-        return beecFunc.ReturnResponse("NONE")
-
-    # Clean the result
-    ValueStr = str(r)
-    ValueStr = ValueStr.replace("\"", "")
-    ValueStr = ValueStr.replace("(", "")
-    ValueStr = ValueStr.replace(")", "")
-    ValueStr = ValueStr.replace("]", "")
-    ValueStr = ValueStr.replace("[", "")
-    ValueStr = ValueStr.replace(" ", "")
-    ValueStr = ValueStr.replace("'", "")
-    ValueStr = ValueStr.split(",")
-
-    # Preper the JSON headers namse
-    Names = ['nickname', 'firstname', 'middlename', 'grandname', 'lastname', 'abuname', 'phone', \
-             'mobile', 'empid', 'hometel', 'empEmail', 'workphone', 'notes', 'departementname', \
-             'detpPhone1', 'detpPhone2', 'DeptEmail1', 'DeptEmail2', \
-             'DeptWeb', 'companyname', 'CompWeb', 'jobname']
-
-    # Generat the final JSON result
-    res = {}
-    i: int = 0;
-    for key in Names:
-        res[key] = ValueStr[i]
-        i = i + 1
-
-    # Create the JSON Ojbect
-    dd = json.dumps(res, ensure_ascii=False).encode('utf8')
-
-    # Create the respnd ojbect
-    response = app.response_class(response=dd, status=200, mimetype='application/json')
-
-    print("Fulldata request was sent successfully")
-    # return the response object
-    return response
-
+# --------------------------------------------------------------------------------------------
 
 @app.route('/NewCard', methods=['POST'])
 def CreateNewCard():
 
     if beecFunc.checkLogin() == False:
-        return
+        return beecFunc.ReturnResponse("LGOIN")
 
     # Request :
     #   - CardInfo(JSON OBJECT tell all the data),
@@ -118,15 +55,20 @@ def CreateNewCard():
         FullInData = json.dumps(request.form)
         FullInData = json.loads(FullInData)
 
+        print(FullInData)
         # Call the create Card Module
-        return beecFunc.ReturnResponse("DONE")
-        #return beecFunc.ReturnResponse(Cards.NewCard.NewCard(POST_REQUEST=FullInData))
 
-def checkLogin():
-    if beecFunc.checkLogin() == False:
-        return beecFunc.ReturnResponse("LOGIN")
-    else:
-        return True
+        # Call the a function in the folder Cards/NewCard.py [It was imported in this name]
+        NewCardResult = AddNewCard(FullInData)
+
+        if NewCardResult[0] == "OK":
+            return beecFunc.ReturnResponse("OK")
+        else:
+            return beecFunc.ReturnResponse("err")
+
+        #return beecFunc.ReturnResponse(NewCard.NewCard(POST_REQUEST=))
+
+# --------------------------------------------------------------------------------------------
 
 @app.route('/WantedFeilds', methods=['GET', 'POST'])
 def WantedFeilds():
@@ -135,3 +77,42 @@ def WantedFeilds():
 
     UserID = str(session['UserID'])
     return beecFunc.ReturnResponse(CardInfo.getSelectedFeilds(UserID))
+
+# --------------------------------------------------------------------------------------------
+
+@app.route('/UploadImage', methods=['POST'])
+def uploadingImageToServer():
+
+    if checkLogin() == False:
+        return beecFunc.ReturnResponse("LOGIN")
+
+    FileStorage = request.files["image"]
+
+    # Make the new image file name
+    randNum =  str(random.random()*1000)[:3]
+    imageFileName = FileStorage.filename + "_" + str(session["UserID"]) + "_" + str(randNum) + ".png"
+
+    print(request.files)
+
+    # Save the comming picture
+    FileStorage.save(os.path.join(app.config["UploadImageFolder"], imageFileName))
+
+    # React with DB
+    r = beecFunc.addImageToDB(FileName=FileStorage.filename, ImageName=imageFileName)
+
+    if 'err' in r:
+        return beecFunc.ReturnResponse("err")
+    else:
+        return beecFunc.ReturnResponse("OK")
+
+# --------------------------------------------------------------------------------------------
+#    Undecordated methods
+# --------------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------
+
+def checkLogin():
+    if beecFunc.checkLogin() == False:
+        return beecFunc.ReturnResponse("LOGIN")
+    else:
+        return True
+

@@ -1,46 +1,68 @@
 import Beec.EstablishConnection as SqlConn
-import flask.json as JObject
+import json
+import sys
 
 from Beec.CommanFunctions import getUserFullData
 
 # --------------------------------------------------------------------------------
 # This is the main function which update three tables
-def updateFullInfo(inFullData="dd"):
+def updateFullInfo(inFullData:json):
 
-    # inFullData Must be a JSON object
-
-    if type(inFullData) != JObject:
-        try:
-            inFullData = JObject.loads(inFullData)
-        except:
-            return ['err', "Unaccepted format"]
-
-    # Employee Table
+    # --------------------------------------------------------------------------------
+    # Employee Table UPDATE ONLY
     empUpdate = updateSingleTable(tableName='employee', newData=inFullData, condationFeild="empid",
                       exceptionColumn=['licencesid', 'userid'])
     if 'err' in empUpdate:
+        print(empUpdate)
         return ["err", "Wrong input for EMPLOYEE"]
 
-    # Department
-    deptUpdate = updateSingleTable(tableName='departement', newData=inFullData, condationFeild="departementid")
-    if 'err' in deptUpdate:
-        deptUpdate = insertNewData(tableName='departement', newData=inFullData, idFeildName="departementid")
-        if 'err' in deptUpdate:
-            return ["err", "Insertion to department Failed"]
-
+    # --------------------------------------------------------------------------------
     # Comapny
-    compUpdate = updateSingleTable(tableName='company', newData=inFullData, condationFeild="companyid")
-    if 'err' in compUpdate:
+    if "companyid" in inFullData:
+        compUpdate = updateSingleTable(tableName='company', newData=inFullData, condationFeild="companyid")
+        if 'err' in compUpdate:
+            return ['err', "Update company", compUpdate]
+    else:
         compUpdate = insertNewData(tableName='company', newData=inFullData, idFeildName="companyid")
         if 'err' in compUpdate:
-            return ["err", "Insertion to company Failed"]
+            return ["err", "Insertion to company", compUpdate]
+        else:
+            inFullData["companyid"] = compUpdate
+
+    # --------------------------------------------------------------------------------
+    # Department
+    # Check if ID is given for the dept
+    if "departementid" in inFullData:
+        # Yes, Update hte info
+        deptUpdate = updateSingleTable(tableName='departement', newData=inFullData, condationFeild="departementid")
+        if 'err' in deptUpdate:
+            print(deptUpdate)
+            return ["err", "Update department"]
     else:
-        return ["OK", ""]
+        # No, Insert a new depratment
+        deptUpdate = insertNewData(tableName='departement', newData=inFullData, idFeildName="departementid")
+
+        if 'err' in deptUpdate:
+            return ["err", "Insertion to department", deptUpdate]
+        else:
+            # Add new depratment id to the Data
+            inFullData['departementid'] = deptUpdate
+
+            # INSERT into the Dept - Employee connection table
+            inData = {"empid":inFullData["empid"], "departid":deptUpdate}
+            deptEmplRe = insertNewData(tableName='empbelongstodeprt', newData=inData, idFeildName="", exceptionColumn=['startdate','enddate'])
+
+            if 'err' in deptEmplRe :
+                return deptEmplRe
+
+    # Every thing went net, return OK, with the new JSON object
+    return ["OK", inFullData]
+
 
 # --------------------------------------------------------------------------------
 # This funcion is used to create the UPDATE sql and send it to database
 
-def updateSingleTable(tableName:str, newData, condationFeild:str , exceptionColumn = []):
+def updateSingleTable(tableName:str, newData:json, condationFeild:str , exceptionColumn = []):
 
     # tableName: the target to update table
     # newData: a jason or dict var that will handle the new data that need to be update with the feild names
@@ -68,46 +90,45 @@ def updateSingleTable(tableName:str, newData, condationFeild:str , exceptionColu
 
         # Attach the new field
         if oneFeild[0] in newData:
-            if newData[oneFeild[0]] == "NONE":
+            if str(newData[oneFeild[0]]).upper() == "NONE" or newData[oneFeild[0]] == "":
                 continue
 
             # Handle the first adding comma to the sql
             if firstComa:
                 SqlStatment = SqlStatment + "',"
             SqlStatment = SqlStatment + "`" + str(oneFeild[0]) + "`='" + str(newData[oneFeild[0]])
+
             firstComa = True
 
+    SqlStatment = SqlStatment.strip()
     if SqlStatment[len(SqlStatment)-1] != "'":
         SqlStatment = SqlStatment + "'"
 
     SqlStatment = SqlStatment + " WHERE `" + condationFeild + "`='" + str(newData[condationFeild]) + "'"
+
+    print(SqlStatment)
 
     finalUpdateResult = SqlConn.SendSQL (db, SqlStatment, returnDate=False)
 
     db.close()
 
     if 'err' in finalUpdateResult:
-        return ["err", "Update failed"]
+        return ["err", "Update failed", finalUpdateResult, SqlStatment]
     else:
         if finalUpdateResult[1] == 0:
             # The Update was ok, but it affact no column. Meaning, there is new data need to be inserted
-            return ["err", "No Rows were affected"]
+            return ["NO Effect", "No Rows were affected"]
         else:
             return ["OK", ""]
 
 # --------------------------------------------------------------------------------
 # Similaer to previous funcion but this one insert the data - BECARFUL
 # --------------------------------------------------------------------------------
-def insertNewData(tableName:str, newData, idFeildName:str, exceptionColumn = []):
-    if type(newData) != JObject:
-        try:
-            newData = JObject.loads(newData)
-        except:
-            return ['err', "Unaccepted format"]
+def insertNewData(tableName:str, newData:json, idFeildName:str, exceptionColumn = []):
 
     db = SqlConn.ConnectToDB()
 
-    # Get employee tabel feilds name
+    # Get tabel feilds name
     EmpTableFeildsName = SqlConn.SendSQL(db, "SELECT `COLUMN_NAME` FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE " \
                 + "`TABLE_SCHEMA`='" + SqlConn.getDatabaseName() + "' AND `TABLE_NAME`='" + tableName + "'")
 
